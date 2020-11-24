@@ -3,7 +3,9 @@
 namespace Signifly\Kubernetes;
 
 use Illuminate\Support\ServiceProvider;
-use Signifly\Kubernetes\Commands\KubernetesCommand;
+use Signifly\Kubernetes\Commands\HorizonLivenessCommand;
+use Signifly\Kubernetes\Commands\HorizonReadinessCommand;
+use Signifly\Kubernetes\Commands\InstallCommand;
 
 class KubernetesServiceProvider extends ServiceProvider
 {
@@ -11,38 +13,42 @@ class KubernetesServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/laravel-kubernetes.php' => config_path('laravel-kubernetes.php'),
+                __DIR__.'/../config/laravel-kubernetes.php' => config_path('laravel-kubernetes.php'),
             ], 'config');
 
             $this->publishes([
-                __DIR__ . '/../resources/views' => base_path('resources/views/vendor/laravel-kubernetes'),
+                __DIR__.'/../resources/views' => base_path('resources/views/vendor/laravel-kubernetes'),
             ], 'views');
 
             $migrationFileName = 'create_laravel_kubernetes_table.php';
             if (! $this->migrationFileExists($migrationFileName)) {
                 $this->publishes([
-                    __DIR__ . "/../database/migrations/{$migrationFileName}.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . '_' . $migrationFileName),
+                    __DIR__."/../database/migrations/{$migrationFileName}.stub" => database_path('migrations/'.date('Y_m_d_His', time()).'_'.$migrationFileName),
                 ], 'migrations');
             }
 
             $this->commands([
-                KubernetesCommand::class,
+                InstallCommand::class,
+                HorizonReadinessCommand::class,
+                HorizonLivenessCommand::class,
             ]);
         }
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-kubernetes');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-kubernetes');
+
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-kubernetes.php', 'laravel-kubernetes');
+        $this->mergeConfigFrom(__DIR__.'/../config/laravel-kubernetes.php', 'laravel-kubernetes');
     }
 
     public static function migrationFileExists(string $migrationFileName): bool
     {
-        $len = strlen($migrationFileName);
-        foreach (glob(database_path("migrations/*.php")) as $filename) {
-            if ((substr($filename, -$len) === $migrationFileName)) {
+        $len = mb_strlen($migrationFileName);
+        foreach (glob(database_path('migrations/*.php')) as $filename) {
+            if ((mb_substr($filename, -$len) === $migrationFileName)) {
                 return true;
             }
         }

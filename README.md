@@ -7,6 +7,12 @@
 
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
+## TODO
+- Configurable liveness / readiness endpoints
+- Configurable liveness / readiness commands
+- Login / create user via `X-Forwarded-User`
+- Trust proxies
+
 ## Installation
 
 You can install the package via composer:
@@ -36,10 +42,36 @@ return [
 
 ## Usage
 
-``` php
-$laravel-kubernetes = new Signifly\Kubernetes();
-echo $laravel-kubernetes->echoPhrase('Hello, Signifly!');
+You can provide a check callback, that's used when checking if the request is authenticated.
+```php
+Kubernetes::useCheck(function ($request, $next) {
+    return $request->ip() === '127.0.0.1';
+});
 ```
+The default check just calls `Auth::check()`.
+
+
+You should provide a login callback that logs in the user, given an email,
+and decices how to further process the request.
+
+For example, redirecting back to the previous url;
+```php
+Kubernetes::useLogin(function ($email) {
+    Auth::login(User::firstOrCreate(['email' => $email]));
+
+    return redirect()->intended();
+});
+```
+
+or, just continuing the middleware chain;
+```php
+Kubernetes::useLogin(function ($email, $request, $next) {
+    Auth::login(User::firstOrCreate(['email' => $email]));
+
+    return $next($request);
+});
+```
+
 
 ## Testing
 
