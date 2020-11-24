@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\Skeleton\Commands;
+namespace Signifly\Kubernetes\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class KubernetesCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-kubernetes';
 
     public $description = 'My command';
 

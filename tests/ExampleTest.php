@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Skeleton\Tests;
+namespace Signifly\Kubernetes\Tests;
 
 class ExampleTest extends TestCase
 {

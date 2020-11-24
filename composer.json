@@ -1,16 +1,16 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": ":package_description",
+    "name": "signifly/laravel-kubernetes",
+    "description": "Integration helpers for running services in Kubernetes",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "signifly",
+        "laravel-kubernetes"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/signifly/laravel-kubernetes",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
+            "name": "Matthias Larsen",
+            "email": "msl@signifly.com",
             "homepage": "https://spatie.be",
             "role": "Developer"
         }
@@ -22,17 +22,19 @@
     "require-dev": {
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.3",
-        "vimeo/psalm": "^3.11"
+        "vimeo/psalm": "^3.11",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "signifly/php-config": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src",
-            "Spatie\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Signifly\\Kubernetes\\": "src",
+            "Signifly\\Kubernetes\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "Signifly\\Kubernetes\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -46,10 +48,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
+                "Signifly\\Kubernetes\\KubernetesServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
+                "Kubernetes": "Signifly\\Kubernetes\\KubernetesFacade"
             }
         }
     },
