@@ -40,8 +40,13 @@ return [
 ];
 ```
 
-## Usage
+Initiate the integration by running;
+```bash
+php artisan kubernetes:install
+```
+This will automatically set up and inject the Http middleware needed for the integration to work.
 
+## Usage
 You can provide a check callback, that's used when checking if the request is authenticated.
 ```php
 Kubernetes::useCheck(function ($request, $next) {
