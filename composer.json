@@ -17,14 +17,14 @@
     ],
     "require": {
         "php": ">=7.4",
-        "illuminate/contracts": "^8.0"
+        "illuminate/contracts": "^8.0",
+        "signifly/php-config": "9999999-dev"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.3",
         "vimeo/psalm": "^3.11",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "signifly/php-config": "dev-master"
+        "friendsofphp/php-cs-fixer": "^2.16"
     },
     "autoload": {
         "psr-4": {
