@@ -19,18 +19,21 @@ class InstallCommand extends Command
         $content = file_get_contents($kernel);
 
         $content = Str::replaceFirst(
-            '\App\Http\Middleware\TrustProxies::class',
+            "        \App\Http\Middleware\TrustProxies::class,\n",
             '',
             $content
         );
 
-        $newMiddleware = implode("\n\t", [
+        $newMiddleware = collect([
             TrustProxies::class,
             ForceLoginViaForwardedUser::class,
-        ]);
+        ])
+            ->map(fn ($class) => "\t\t\\{$class}::class,")
+            ->join("\n");
+
         $content = Str::replaceFirst(
             'protected $middleware = [',
-            $newMiddleware,
+            "protected \$middleware = [\n".$newMiddleware,
             $content
         );
 
