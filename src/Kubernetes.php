@@ -2,6 +2,7 @@
 
 namespace Signifly\Kubernetes;
 
+use Closure;
 use Illuminate\Support\Facades\Auth;
 
 class Kubernetes
