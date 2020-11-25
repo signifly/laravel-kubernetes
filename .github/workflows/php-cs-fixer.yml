@@ -12,13 +12,27 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
       - name: Composer install
+        if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer require signifly/php-config
 
       - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php_cs.dist --allow-risky=yes
+        run: ./vendor/bin/php-cs-fixer fix
+#        uses: docker://oskarstark/php-cs-fixer-ga
+#        with:
+#          args: --config=.php_cs.dist --allow-risky=yes
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
