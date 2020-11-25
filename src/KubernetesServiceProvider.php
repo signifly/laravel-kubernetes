@@ -29,9 +29,14 @@ class KubernetesServiceProvider extends ServiceProvider
 
             $this->commands([
                 InstallCommand::class,
-                HorizonReadinessCommand::class,
-                HorizonLivenessCommand::class,
             ]);
+
+            if (config('kubernetes.healthchecks')) {
+                $this->commands([
+                    HorizonReadinessCommand::class,
+                    HorizonLivenessCommand::class,
+                ]);
+            }
         }
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-kubernetes');
