@@ -15,6 +15,7 @@ class InstallCommand extends Command
 
     public function handle()
     {
+        // todo: do this instead; https://github.com/scoutapp/scout-apm-laravel/blob/master/src/Providers/ScoutApmServiceProvider.php#L152
         $kernel = app_path('Http/Kernel.php');
         $content = file_get_contents($kernel);
 

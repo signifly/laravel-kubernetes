@@ -13,7 +13,7 @@ class KubernetesServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/laravel-kubernetes.php' => config_path('laravel-kubernetes.php'),
+                __DIR__.'/../config/laravel-kubernetes.php' => config_path('kubernetes.php'),
             ], 'config');
 
             $this->publishes([
@@ -46,7 +46,7 @@ class KubernetesServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/laravel-kubernetes.php', 'laravel-kubernetes');
+        $this->mergeConfigFrom(__DIR__.'/../config/laravel-kubernetes.php', 'kubernetes');
     }
 
     public static function migrationFileExists(string $migrationFileName): bool
