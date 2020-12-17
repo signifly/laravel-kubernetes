@@ -4,6 +4,7 @@ namespace Signifly\Kubernetes;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Kubernetes
 {
@@ -13,6 +14,17 @@ class Kubernetes
     public static $httpLivenessCallback = null;
     public static $checkUsing = null;
     public static $loginUsing = null;
+
+    protected static $requestId = null;
+
+    public static function requestId()
+    {
+        return self::$requestId
+                ?? request()->header('X-Trace-Id')
+                ?? request()->header('X-Request-Id')
+                ?? request()->header('X-Amzn-Trace-Id')
+                ?? self::$requestId = Str::orderedUuid();
+    }
 
     public static function horizonReadiness($request)
     {
