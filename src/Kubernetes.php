@@ -33,7 +33,7 @@ class Kubernetes
             Artisan::call('horizon:status');
             $horizonStatus = Artisan::output();
 
-            $this->comment(trim($horizonStatus));
+            echo trim($horizonStatus);
 
             // 0 = healthy, 1 = unhealthy.
             return Str::contains($horizonStatus, 'running') ? 0 : 1;
@@ -53,7 +53,7 @@ class Kubernetes
             Artisan::call('horizon:status');
             $horizonStatus = Artisan::output();
 
-            $this->comment(trim($horizonStatus));
+            echo trim($horizonStatus);
 
             // 0 = healthy, 1 = unhealthy.
             return Str::contains($horizonStatus, 'running') ? 0 : 1;
