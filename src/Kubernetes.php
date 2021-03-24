@@ -3,6 +3,7 @@
 namespace Signifly\Kubernetes;
 
 use Closure;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -26,10 +27,16 @@ class Kubernetes
                 ?? self::$requestId = Str::orderedUuid();
     }
 
-    public static function horizonReadiness($request)
+    public static function horizonReadiness($request = null)
     {
         return (static::$horizonReadinessCallback ?: function () {
-            return 0; // 0 = success
+            Artisan::call('horizon:status');
+            $horizonStatus = Artisan::output();
+
+            $this->comment(trim($horizonStatus));
+
+            // 0 = healthy, 1 = unhealthy.
+            return Str::contains($horizonStatus, 'running') ? 0 : 1;
         })($request);
     }
 
@@ -40,10 +47,16 @@ class Kubernetes
         return new static;
     }
 
-    public static function horizonLiveness($request)
+    public static function horizonLiveness($request = null)
     {
         return (static::$horizonLivenessCallback ?: function () {
-            return 0; // 0 = success
+            Artisan::call('horizon:status');
+            $horizonStatus = Artisan::output();
+
+            $this->comment(trim($horizonStatus));
+
+            // 0 = healthy, 1 = unhealthy.
+            return Str::contains($horizonStatus, 'running') ? 0 : 1;
         })($request);
     }
 
@@ -54,7 +67,7 @@ class Kubernetes
         return new static;
     }
 
-    public static function httpReadiness($request)
+    public static function httpReadiness($request = null)
     {
         return (static::$httpReadinessCallback ?: function () {
             return 'ok';
@@ -68,7 +81,7 @@ class Kubernetes
         return new static;
     }
 
-    public static function httpLiveness($request)
+    public static function httpLiveness($request = null)
     {
         return (static::$httpLivenessCallback ?: function () {
             return 'ok';
