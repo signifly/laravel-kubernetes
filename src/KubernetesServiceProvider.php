@@ -2,7 +2,10 @@
 
 namespace Signifly\Kubernetes;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
 use Signifly\Kubernetes\Commands\HorizonLivenessCommand;
 use Signifly\Kubernetes\Commands\HorizonReadinessCommand;
 use Signifly\Kubernetes\Commands\InstallCommand;
@@ -47,6 +50,33 @@ class KubernetesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/laravel-kubernetes.php', 'kubernetes');
+
+        // Force logging to stdout/stderr
+        Config::set('logging.default', 'stack');
+        Config::set('logging.channels.stack', [
+            'driver' => 'stack',
+            'channels' => ['single', 'stderr', 'stdout'],
+            'ignore_exceptions' => false,
+        ]);
+        Config::set('logging.channels.stderr', [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'level' => 'error',
+            'formatter' => env('LOG_STDERR_FORMATTER', JsonFormatter::class),
+            'with' => [
+                'stream' => 'php://stderr',
+                'bubble' => false,
+            ],
+        ]);
+        Config::set('logging.channels.stdout', [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'formatter' => env('LOG_STDOUT_FORMATTER', JsonFormatter::class),
+            'level' => 'debug',
+            'with' => [
+                'stream' => 'php://stdout',
+            ],
+        ]);
     }
 
     public static function migrationFileExists(string $migrationFileName): bool
