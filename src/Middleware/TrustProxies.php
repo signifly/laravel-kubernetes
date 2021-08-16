@@ -16,7 +16,7 @@ class TrustProxies extends Middleware
         '10.0.0.0/8',
         '172.16.0.0/12',
         '192.168.0.0/16',
-        '100.64.0.0/16',
+        '100.64.0.0/10',
     ];
 
     /**
@@ -24,5 +24,5 @@ class TrustProxies extends Middleware
      *
      * @var int
      */
-    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+    protected $headers = Request::HEADER_X_FORWARDED_TRAEFIK;
 }
