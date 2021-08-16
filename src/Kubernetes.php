@@ -111,7 +111,8 @@ class Kubernetes
 
     public static function login($email, $request, $next)
     {
-        return (static::$loginUsing ?: function () {
+        return (static::$loginUsing ?: function ($_, $request, $next) {
+            return $next($request);
         })($email, $request, $next);
     }
 
