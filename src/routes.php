@@ -1,15 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Signifly\Kubernetes\Kubernetes;
+use Signifly\Kubernetes\Http\KubernetesController;
 
 if (config('kubernetes.healthchecks')) {
-    Route::get('/healthz/liveness', function (Request $request) {
-        return Kubernetes::httpLiveness($request);
-    });
+    Route::get('/healthz/liveness', [KubernetesController::class, 'liveness']);
 
-    Route::get('/healthz/readiness', function (Request $request) {
-        return Kubernetes::httpReadiness($request);
-    });
+    Route::get('/healthz/readiness', [KubernetesController::class, 'readiness']);
 }
